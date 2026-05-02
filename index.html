@@ -3,13 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Resource Assistant</title>
+
+  <!-- Load Lato font from Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   html, body {
     height: 100%;
-    font-family: 'Lato','Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Lato', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: #f0f4f8;
     overflow: hidden;
   }
@@ -63,6 +70,7 @@
     align-self: flex-end;
     border-bottom-right-radius: 4px;
   }
+
   .bubble.bot {
     background: white;
     color: #222;
@@ -71,12 +79,14 @@
     box-shadow: 0 1px 4px rgba(0,0,0,0.09);
     line-height: 1.8;
   }
+
   .bubble.bot a {
     color: #1a5276;
     text-decoration: underline;
     word-break: break-word;
     overflow-wrap: break-word;
   }
+
   .bubble.typing {
     color: #aaa;
     font-style: italic;
@@ -92,6 +102,7 @@
     border-top: 1px solid #dde3ea;
     flex-shrink: 0;
   }
+
   #msg-input {
     flex: 1;
     padding: 10px 16px;
@@ -103,6 +114,7 @@
     resize: none;
     font-family: inherit;
   }
+
   #msg-input:focus { border-color: #1a5276; }
 
   #send-btn {
@@ -120,8 +132,13 @@
     align-items: center;
     justify-content: center;
   }
-  #send-btn:hover   { background: #154360; }
-  #send-btn:disabled { background: #b0bec5; cursor: default; }
+
+  #send-btn:hover { background: #154360; }
+
+  #send-btn:disabled {
+    background: #b0bec5;
+    cursor: default;
+  }
 
   /* ── Disclaimer ── */
   #disclaimer {
@@ -144,6 +161,7 @@
   }
 </style>
 </head>
+
 <body>
 
   <div id="header">
@@ -209,18 +227,18 @@
     
       // Restore as clean links
       links.forEach((url, index) => {
-      const href = url.startsWith('http') ? url : 'https://' + url;
-      const display = url
-        .replace(/^https?:\/\/(www\.)?/, '')
-        .replace(/^www\./, '')
-        .replace(/\/.*$/, '')
-        .replace(/\?.*$/, '');
+        const href = url.startsWith('http') ? url : 'https://' + url;
+        const display = url
+          .replace(/^https?:\/\/(www\.)?/, '')
+          .replace(/^www\./, '')
+          .replace(/\/.*$/, '')
+          .replace(/\?.*$/, '');
     
-      processed = processed.replace(
-        `%%LINK${index}%%`,
-        `<a href="${href}" target="_blank" rel="noopener noreferrer" style="color:#1a5276;text-decoration:underline;overflow-wrap:break-word;">${display}</a>`
-      );
-    });
+        processed = processed.replace(
+          `%%LINK${index}%%`,
+          `<a href="${href}" target="_blank" rel="noopener noreferrer" style="color:#1a5276;text-decoration:underline;overflow-wrap:break-word;">${display}</a>`
+        );
+      });
         
       div.innerHTML = processed;
       chatWindow.appendChild(div);
@@ -239,7 +257,7 @@
 
       addBubble(text, 'user');
 
-      // Keep last 10 exchanges (20 messages) for context
+      // Keep last 10 exchanges, 20 messages, for context
       if (history.length > 20) history = history.slice(-20);
       history.push({ role: 'user', content: text });
 
@@ -248,7 +266,7 @@
       try {
         const res = await fetch(PROXY_URL, {
           method: 'POST',
-          headers: { 'Content-Type': 'text/plain' }, // ← key change
+          headers: { 'Content-Type': 'text/plain' },
           body: JSON.stringify({
             message: text,
             history: history.slice(0, -1)
@@ -308,7 +326,6 @@
     window.addEventListener('resize', notifyParentHeight);
 
     chatWindow.scrollTop = 0;
-    
   </script>
 
 </body>
